@@ -1,0 +1,31 @@
+.table{
+    min-height: 100%;
+    background-color:rgb(200, 200, 200);
+}
+
+.add-desk{
+    background-color:rgb(100, 100, 100);
+    min-height: 25vh;
+}
+
+.desks{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    min-height: 75vh;
+}
+
+.add-button{
+    width: 50%;
+    height: 3rem;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.add-button-wrapper{
+    text-align: center; 
+}
+
+.input-form{
+    margin: 5px;
+}
