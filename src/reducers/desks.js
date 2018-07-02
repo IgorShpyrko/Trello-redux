@@ -61,11 +61,14 @@ export default function desks(state = initialState, action) {
       return newState
   
       case 'DELETE_DESK_CONTENT':
+      
         newState = state.map(item => {
           if(item.id !== action.deskId){
+            
             return item
           } else {
-            item.content = item.content.slice(0, action.index).concat(item.content.slice(action.index + 1));
+            
+            item.content = item.content.slice(0, action.index).concat(item.content.slice(+action.index + 1));
             return item
           }
         });

@@ -4,12 +4,35 @@ import uuidv4 from 'uuid';
 
 import './Desk.css';
 
+function findTargetParentByClassName(elem, searchClassName) {
+  if(elem.className !== searchClassName){
+    elem = elem.parentNode
+    return findTargetParentByClassName(elem, searchClassName)
+  }
+  
+  if(elem.className === searchClassName){
+    return elem
+  } 
+}
+
 class Desk extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       value: ''
     }
+  }
+
+  handleInputKeyDown = (e) => {
+    // console.log(e.keyCode);
+
+    if(e.keyCode === 27){
+      this.handleCloseAddDialog(e)
+    }
+    if(e.keyCode === 13){
+      this.handleAddContent(e)
+    }
+    
   }
 
   handleChangeInputValue = (e) => {
@@ -19,9 +42,10 @@ class Desk extends React.Component{
   }
 
   handleAddContent = (e) => {
+    let elem = findTargetParentByClassName(e.target, 'desk')
     this.props.dispatch({
       type: 'ADD_DESK_CONTENT',
-      deskId: e.target.parentNode.parentNode.id,
+      deskId: elem.id,
       value: this.state.value
     });
     this.handleCloseAddDialog(e)
@@ -91,6 +115,7 @@ class Desk extends React.Component{
           <h3>{header}</h3>
           <div className='desk-content'>
             {this.props.content.map((item, index) => {
+              
               let key = uuidv4()
                 
               return (
@@ -111,7 +136,8 @@ class Desk extends React.Component{
               autoFocus 
               type="text" 
               onBlur={this.handleCloseAddDialog}
-              onChange={this.handleChangeInputValue}/>
+              onChange={this.handleChangeInputValue}
+              onKeyDown={this.handleInputKeyDown}/>
             </div>
             <button className='save-btn' onClick ={this.handleAddContent}>Save</button> 
             </div> :
