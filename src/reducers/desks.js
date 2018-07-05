@@ -46,7 +46,7 @@ export default function desks(state = initialState, action) {
       localStorage.setItem('desks', JSON.stringify(newState));
       return newState;
 
-      case 'ADD_DESK_CONTENT':
+    case 'ADD_DESK_CONTENT':
       newState = state.map(item => {
         if(item.id !== action.deskId){
           return item
@@ -60,20 +60,47 @@ export default function desks(state = initialState, action) {
       localStorage.setItem('desks', JSON.stringify(newState));
       return newState
   
-      case 'DELETE_DESK_CONTENT':
+    case 'DELETE_DESK_CONTENT':
+    
+      newState = state.map(item => {
+        if(item.id !== action.deskId){
+          
+          return item
+        } else {
+          
+          item.content = item.content.slice(0, action.index).concat(item.content.slice(+action.index + 1));
+          return item
+        }
+      });
+      localStorage.setItem('desks', JSON.stringify(newState));
+      return newState;
+
+    case 'CHANGE_CONTENT_ITEM':
       
-        newState = state.map(item => {
-          if(item.id !== action.deskId){
-            
-            return item
-          } else {
-            
-            item.content = item.content.slice(0, action.index).concat(item.content.slice(+action.index + 1));
-            return item
+      newState = state.map(item => {
+        // searching desk to change
+        if(item.id !== action.payload.content){
+          return item
+        }
+        else return (
+          Object.assign(
+            {},
+            {
+              ...item,
+              // searching for content to change
+              content: item.content.map(
+              (elem, index) => {
+                if(index !== action.payload.index){
+                  return elem
+                }
+                return action.payload.innerText
+              }
+            )
           }
-        });
-        localStorage.setItem('desks', JSON.stringify(newState));
-        return newState;
+          )
+        )
+      })
+      return newState
 
     default:
       return state;

@@ -3,65 +3,11 @@ import { connect } from 'react-redux';
 import uuidv4 from 'uuid';
 
 import './Desk.css';
+import AddContent from '../../AddContent/AddContent';
 
-function findTargetParentByClassName(elem, searchClassName) {
-  if(elem.className !== searchClassName){
-    elem = elem.parentNode
-    return findTargetParentByClassName(elem, searchClassName)
-  }
-  
-  if(elem.className === searchClassName){
-    return elem
-  } 
-}
+
 
 class Desk extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      value: ''
-    }
-  }
-
-  handleInputKeyDown = (e) => {
-    // console.log(e.keyCode);
-
-    if(e.keyCode === 27){
-      this.handleCloseAddDialog(e)
-    }
-    if(e.keyCode === 13){
-      this.handleAddContent(e)
-    }
-    
-  }
-
-  handleChangeInputValue = (e) => {
-    this.setState({
-      value: e.target.value
-    })
-  }
-
-  handleAddContent = (e) => {
-    let elem = findTargetParentByClassName(e.target, 'desk')
-    this.props.dispatch({
-      type: 'ADD_DESK_CONTENT',
-      deskId: elem.id,
-      value: this.state.value
-    });
-    this.handleCloseAddDialog(e)
-  }
-
-  handleCloseAddDialog = (e) => {
-    if(e.relatedTarget && e.relatedTarget.className === 'save-btn'){
-      return null
-    }
-    this.setState({
-      value: ''
-    });
-    this.props.dispatch({
-      type: 'CLOSE_NEW_DESK_CONTENT_DIALOG'
-    })    
-  }
 
   handleOpenAddDialog = (e) => {
     this.props.dispatch({
@@ -85,11 +31,13 @@ class Desk extends React.Component{
     if(e.target.localName === 'button') return;
     if(e.target.localName === 'input') return;
 
-    let desk = e.currentTarget;
+    let index = e.currentTarget;
+    let desk = this.props;
 
     this.props.dispatch({
       type: 'OPEN_POPUP',
-      index: desk
+      index: index,
+      desk: desk
     })
   }
 
@@ -130,17 +78,7 @@ class Desk extends React.Component{
           </div>
           {
             openAddPopup === true ? 
-            <div>
-            <div>
-              <input 
-              autoFocus 
-              type="text" 
-              onBlur={this.handleCloseAddDialog}
-              onChange={this.handleChangeInputValue}
-              onKeyDown={this.handleInputKeyDown}/>
-            </div>
-            <button className='save-btn' onClick ={this.handleAddContent}>Save</button> 
-            </div> :
+            <AddContent /> :
             null
           }
           {

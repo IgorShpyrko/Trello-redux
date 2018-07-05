@@ -1,20 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { combineReducers, createStore } from 'redux';
+import { createStore } from 'redux';
 
 import './index.css';
 import Popup from './Components/Popup/Popup';
 import Table from './Components/Table/Table';
-import desks from './reducers/desks';
-import showPopup from './reducers/showPopup';
-import openAddContentPopup from './reducers/openAddContentPopup';
-
-const rootReducer = combineReducers({
-  showPopup,
-  desks,
-  openAddContentPopup
-})
+import rootReducer from './reducers';
 
 const store = createStore(
   rootReducer,
