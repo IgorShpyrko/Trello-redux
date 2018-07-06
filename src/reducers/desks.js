@@ -76,6 +76,9 @@ export default function desks(state = initialState, action) {
       return newState;
 
     case 'CHANGE_CONTENT_ITEM':
+      if(action.payload.innerText ===''){
+        return state
+      }
       
       newState = state.map(item => {
         // searching desk to change
@@ -99,8 +102,28 @@ export default function desks(state = initialState, action) {
           }
           )
         )
-      })
+      });
+      localStorage.setItem('desks', JSON.stringify(newState));
       return newState
+
+      case 'CHANGE_CONTENT_HEADER':
+        if((action.newValue === ' ') || (action.newValue === '')){
+          return state
+        }
+
+        newState = state.map(
+          item => {
+            if(item.id !== action.desk.id){
+              return item
+            }
+            return {
+              ...item,
+              name: action.newValue
+            }
+          }
+        )
+        localStorage.setItem('desks', JSON.stringify(newState));
+        return newState
 
     default:
       return state;

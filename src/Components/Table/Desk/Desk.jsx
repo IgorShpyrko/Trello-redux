@@ -4,8 +4,7 @@ import uuidv4 from 'uuid';
 
 import './Desk.css';
 import AddContent from '../../AddContent/AddContent';
-
-
+import DeskHeader from "./DeskHeader/DeskHeader";
 
 class Desk extends React.Component{
 
@@ -30,6 +29,7 @@ class Desk extends React.Component{
 
     if(e.target.localName === 'button') return;
     if(e.target.localName === 'input') return;
+    if(e.target.className === 'desk-header') return;
 
     let index = e.currentTarget;
     let desk = this.props;
@@ -49,23 +49,18 @@ class Desk extends React.Component{
   }
 
   render() {
-    
-    let header = +this.props.name.length < 10 ?
-      this.props.name :
-      `${this.props.name.substr(0, 10)}...`;
 
-      let openAddPopup = this.props.openAddContentPopup.addContent === true && (this.props.id === this.props.openAddContentPopup.id)
+    let openAddPopup = this.props.openAddContentPopup.addContent === true &&(this.props.id === this.props.openAddContentPopup.id)
       
     return(
       <React.Fragment>
         <div className='desk' onClick={this.handleOpenPopup} id={this.props.id}>
         <button className='del-button' onClick={this.handleClickDeleteDesk}>Delete Desk</button>
-          <h3>{header}</h3>
+          <DeskHeader name={this.props.name} />
           <div className='desk-content'>
             {this.props.content.map((item, index) => {
               
               let key = uuidv4()
-                
               return (
                     <div className='content-item' key={key} id={key} index={index}>
                       {item.length < 10 ? item : `${item.substr(0, 9)}...`}

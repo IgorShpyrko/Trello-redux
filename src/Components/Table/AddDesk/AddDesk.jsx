@@ -3,7 +3,10 @@ import './AddDesk.css';
 import { connect } from 'react-redux';
 import uuidv4 from 'uuid';
 
+import Item from './item/Item';
+
 function AddDesk(props) {
+
   
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -29,14 +32,8 @@ function AddDesk(props) {
     <div className="add-desk">
       <form action='submit' onSubmit={handleSubmit} className='form'>
         <h1 className='form-header'>Add New Desk</h1>
-        <div className="form-item">
-          <input type="text" name="newDeskName"/>
-          <label htmlFor="newDeskName">Name</label>
-        </div>
-        <div className="form-item">
-          <input type="text" name="newDeskContent"/>
-          <label htmlFor="newDeskContent">Content</label>
-        </div>
+        <Item name='newDeskName' value='Name' />
+        <Item name='newDeskContent' value='Content' />
         <button type="submit">Add new Desk</button>
       </form>
     </div>

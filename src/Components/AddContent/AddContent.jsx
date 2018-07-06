@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import findParent from '../../utils/findParent';
+
 class AddContent extends React.Component{
   constructor(props){
     super(props);
@@ -45,7 +47,7 @@ class AddContent extends React.Component{
     return
    }
     
-    let elem = findTargetParentByClassName(e.target, 'desk')
+    let elem = findParent(e.target, 'desk')
     this.props.dispatch({
       type: 'ADD_DESK_CONTENT',
       deskId: elem.id,
@@ -79,14 +81,3 @@ function mapStateToProps(state){
 
 export default connect(mapStateToProps)(AddContent);
 
-function findTargetParentByClassName(elem, searchClassName) {
-  
-  if(elem.className !== searchClassName){
-    elem = elem.parentNode
-    return findTargetParentByClassName(elem, searchClassName)
-  }
-  
-  if(elem.className === searchClassName){
-    return elem
-  } 
-}

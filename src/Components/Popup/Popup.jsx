@@ -7,10 +7,41 @@ class Popup extends React.Component{
     super(props);
     this.state = {
       value: '',
-      isOpenedPopup: false,
+      isOpenedContentPopup: false,
       index: -1,
       inputValue: ''
     }
+  }
+
+  handleContentInputBlur = (e) => {
+    if(e.relatedTarget == null) {
+      this.handleCloseInputPopup();
+      return
+    }
+    if(e.relatedTarget.localName === 'button'){
+      return
+    } else {
+      this.handleCloseInputPopup();
+    }
+  }
+
+  handleContentInputKeyDown = (e) => {
+    
+    if(e.keyCode === 27){
+      this.handleCloseInputPopup();
+    }
+    if(e.keyCode === 13){
+      this.handleEditContent(e)
+    }
+  }
+
+  handleCloseInputPopup = () => {
+    this.setState({
+      value: '',
+      index: -1,
+      inputValue: '',
+      isOpenedContentPopup: false
+    })
   }
 
   handleChangeInputValue = (e) => {
@@ -20,12 +51,26 @@ class Popup extends React.Component{
   }
 
   handleOpenEditMode = (e, index) => {
-    
-    this.setState({
-      value: e.target.innerText,
-      isOpenedPopup: true,
-      index: index
+
+    if(e.target.localName === 'button'){
+      return
+    }
+    let innerText = e.target.innerText
+
+    this.setState((prevState, props)=>{
+      return {
+        value: innerText,
+        isOpenedContentPopup: !prevState.isOpenedContentPopup,
+        index: index
+      }
+      
     })
+    
+    // this.setState({
+    //   value: e.target.innerText,
+    //   isOpenedContentPopup: true,
+    //   index: index
+    // })
   }
 
   handleEditContent = (e) => {
@@ -37,16 +82,14 @@ class Popup extends React.Component{
         innerText: this.state.inputValue,
         index: this.state.index
       }
-    })
-    this.setState({
-      value: '',
-      index: -1,
-      inputValue: ''
-    })
-    
+    });
+    this.handleCloseInputPopup();
   }
 
   handleClosePopup = (e) => {
+    if(e.target.localName !== 'body'){
+      return
+    }
     if(e.keyCode === 27 || e.keyCode === 13) {
         this.closePopup()
     }
@@ -56,7 +99,7 @@ class Popup extends React.Component{
   closePopup = () => {
     this.setState({
       ...this.state,
-      isOpenedPopup: false
+      isOpenedContentPopup: false
     })
     this.props.dispatch({
       type: 'CLOSE_POPUP'
@@ -70,7 +113,6 @@ class Popup extends React.Component{
     const desk = this.props.desks.filter(item => item.id === this.props.index)
 
     document.body.addEventListener('keydown', this.handleClosePopup)
-
 
     return(
       <div className='popup-wrapper' 
@@ -86,12 +128,15 @@ class Popup extends React.Component{
                     key={index}
                     onClick={(e) => this.handleOpenEditMode(e, index)}>
                       {item}
-                      {(this.state.isOpenedPopup && index === this.state.index) ?
+                      {(this.state.isOpenedContentPopup && index === this.state.index) ?
                          <div>
                            <input 
+                              autoFocus
                               type='text' 
                               value={this.state.inputValue}
-                              onChange={this.handleChangeInputValue}/>
+                              onChange={this.handleChangeInputValue}
+                              onKeyDown={this.handleContentInputKeyDown}
+                              onBlur={this.handleContentInputBlur}/>
                             <button onClick={this.handleEditContent}>Save</button>
                           </div>
                           : null
